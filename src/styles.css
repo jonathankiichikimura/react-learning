@@ -1,0 +1,386 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f0f0f;
+  color: #e0e0e0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+}
+
+/* ---- Layout ---- */
+
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #161616;
+  border-right: 1px solid #262626;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-title {
+  padding: 1.25rem 1rem 1rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+  border-bottom: 1px solid #1f1f1f;
+  flex-shrink: 0;
+}
+
+/* ---- Phase groups ---- */
+
+.phase-group {
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: #666;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.1s;
+}
+
+.phase-header:hover {
+  color: #999;
+}
+
+.phase-header.has-active {
+  color: #60a5fa;
+}
+
+.phase-num {
+  font-size: 0.65rem;
+  background: #252525;
+  color: #555;
+  border-radius: 3px;
+  padding: 0.1rem 0.35rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  flex-shrink: 0;
+}
+
+.phase-header.has-active .phase-num {
+  background: #1a2f4a;
+  color: #3b82f6;
+}
+
+.phase-name {
+  flex: 1;
+}
+
+.phase-chevron {
+  font-size: 0.65rem;
+  color: #444;
+}
+
+.phase-challenges {
+  padding-bottom: 0.25rem;
+}
+
+.challenge-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: #999;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.1s, color 0.1s;
+}
+
+.challenge-btn:hover {
+  background: #1e1e1e;
+  color: #ccc;
+}
+
+.challenge-btn.active {
+  background: #1a2f4a;
+  color: #60a5fa;
+}
+
+.challenge-num {
+  font-size: 0.68rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: #444;
+  min-width: 18px;
+}
+
+.challenge-btn.active .challenge-num {
+  color: #3b82f6;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ---- Challenge Header ---- */
+
+.challenge-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: #141414;
+  border-bottom: 1px solid #222;
+  flex-shrink: 0;
+  gap: 1rem;
+}
+
+.challenge-header h2 {
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+}
+
+.badge {
+  font-size: 0.68rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  background: #1a2f4a;
+  color: #60a5fa;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+}
+
+.solution-toggle {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid #3b4a5a;
+  background: transparent;
+  color: #60a5fa;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.solution-toggle:hover,
+.solution-toggle.showing {
+  background: #1a2f4a;
+  border-color: #3b82f6;
+}
+
+/* ---- Content Area ---- */
+
+.content-area {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.description {
+  width: 320px;
+  flex-shrink: 0;
+  padding: 1.25rem;
+  overflow-y: auto;
+  background: #141414;
+  border-right: 1px solid #222;
+}
+
+.desc-section {
+  margin-bottom: 1.5rem;
+}
+
+.desc-label {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.desc-text {
+  font-size: 0.84rem;
+  color: #bbb;
+  line-height: 1.65;
+}
+
+.hints {
+  border: 1px solid #222;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.hints summary {
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  user-select: none;
+  list-style: none;
+}
+
+.hints summary::-webkit-details-marker {
+  display: none;
+}
+
+.hints summary::before {
+  content: '▶  ';
+  font-size: 0.6rem;
+}
+
+details[open] > summary::before {
+  content: '▼  ';
+}
+
+.hints ul {
+  padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+  border-top: 1px solid #1f1f1f;
+}
+
+.hints li {
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 0.45rem;
+  line-height: 1.55;
+}
+
+.acceptance-list {
+  padding-left: 1.1rem;
+}
+
+.acceptance-list li {
+  font-size: 0.82rem;
+  color: #aaa;
+  margin-bottom: 0.35rem;
+  line-height: 1.5;
+}
+
+.file-path {
+  font-size: 0.72rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: #60a5fa;
+  background: #1a2f4a;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  display: block;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+/* ---- Preview Area ---- */
+
+.preview-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.preview-label {
+  padding: 0.45rem 1.25rem;
+  background: #141414;
+  border-bottom: 1px solid #1f1f1f;
+  font-size: 0.68rem;
+  color: #555;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.preview {
+  flex: 1;
+  padding: 2rem;
+  overflow: auto;
+  background: #0f0f0f;
+}
+
+/* ---- Helpers available inside .preview for challenge components ---- */
+
+.preview h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.preview h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.preview h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.preview p  { margin-bottom: 0.5rem; line-height: 1.6; }
+
+.preview button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #3a3a3a;
+  background: #222;
+  color: #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.1s;
+}
+
+.preview button:hover {
+  background: #2e2e2e;
+}
+
+.preview input {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #3a3a3a;
+  background: #1a1a1a;
+  color: #ddd;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.preview input:focus {
+  border-color: #3b82f6;
+}
+
+.preview ul,
+.preview ol {
+  padding-left: 1.5rem;
+}
+
+.preview li {
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+/* .card — available to use in your challenge components */
+.card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  min-width: 150px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.card h3 { margin: 0; font-size: 1rem; }
+.card p  { margin: 0; color: #777; font-size: 0.82rem; }
