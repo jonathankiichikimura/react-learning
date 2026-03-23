@@ -25,20 +25,11 @@ export const description = {
 //      - A <p> with a role/title
 //
 // 2. Render <UserCard /> inside the Challenge return below
-function UserCard() {
-  return (
-    <div className="card">
-      <span style={{ fontSize: "3rem"}}>😁</span>
-      <h3>Jon</h3>
-      <p>Software Engineer</p>
-    </div>
-  )
-}
 
 export default function Challenge() {
   return (
     <div>
-      <UserCard></UserCard>
+      {/* Render your UserCard component here */}
     </div>
   )
 }

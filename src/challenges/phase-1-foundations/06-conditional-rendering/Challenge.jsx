@@ -24,27 +24,11 @@ export default function Challenge() {
   // 2. When logged OUT: show a message and a "Log In" button that sets isLoggedIn to true
   // 3. When logged IN: show a welcome message and a "Log Out" button that sets isLoggedIn to false
   // Use a ternary: {isLoggedIn ? (...logged in JSX...) : (...logged out JSX...)}
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-  function LoggedInView() {
-    return (
-      <div>
-        <p>Welcome back!</p>
-        <button onClick={() => setIsLoggedIn(!isLoggedIn)}>Log out</button>
-      </div>
-    )
-  }
-
-  function LoggedOutView() {
-    return (
-      <div>
-        <p>You are logged out.</p>
-        <button onClick={() => setIsLoggedIn(!isLoggedIn)}>Log In</button>
-      </div>
-    )
-  }
 
   return (
-    isLoggedIn ? <LoggedInView></LoggedInView> : <LoggedOutView></LoggedOutView>
+    <div>
+      <p>You are logged out.</p>
+      <button>Log In</button>
+    </div>
   )
 }

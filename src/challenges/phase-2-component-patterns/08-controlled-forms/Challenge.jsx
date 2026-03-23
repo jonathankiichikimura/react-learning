@@ -23,13 +23,6 @@ export const description = {
 export default function Challenge() {
   // TODO:
   // 1. Create state for name, email, password (and maybe a submitted flag)
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  function handleSubmit(e) {
-    e.preventDefault()
-
-  }
   // 2. Wire each input's value and onChange
   // 3. Disable the button when any field is empty
   // 4. Handle form submission: prevent default, then show the success message
@@ -37,7 +30,7 @@ export default function Challenge() {
   return (
     <form>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: '300px' }}>
-        <input placeholder="Name" value={email} onChange={e => setName(e.target.value)}/>
+        <input placeholder="Name" />
         <input placeholder="Email" type="email" />
         <input placeholder="Password" type="password" />
         <button type="submit">Sign Up</button>

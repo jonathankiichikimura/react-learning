@@ -25,12 +25,10 @@ export default function Challenge() {
   // 2. Add an onClick handler that toggles liked
   // 3. Use a ternary to display the right emoji and text based on liked
 
-  const [liked, setLiked] = useState(false)
-
   return (
     <div>
-      <button onClick={() => setLiked(!liked)}>
-        {liked ? "❤️ Liked · 1 like" : "🤍 Like · 0 likes"}
+      <button>
+        🤍 Like · 0 likes
       </button>
     </div>
   )

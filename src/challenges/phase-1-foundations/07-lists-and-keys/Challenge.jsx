@@ -35,25 +35,19 @@ export default function Challenge() {
   // 3. Render todos with .map() — don't forget the key prop!
   // 4. Wire the input's onChange to update input state
   // 5. Wire the "Add" button to append a new todo and clear the input
-  const [todos, setTodos] = useState(initialTodos)
-  const [input, setInput] = useState("")
+
   return (
     <div>
       <ul>
         {/* Replace this with a .map() over your todos state */}
-        {todos.map(todo => (
-          <li key={todo.id}>{todo.text}</li>
+        {initialTodos.map(todo => (
+          <li>{todo.text}</li>
         ))}
       </ul>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
-        <input placeholder="New todo..." value={input} onChange={e => setInput(e.target.value)}/>
-        <button onClick={() => {
-            setTodos([...todos, {id: Date.now(), text: input.trim()}])
-            setInput("")
-            }
-          }
-        >Add</button>
+        <input placeholder="New todo..." />
+        <button>Add</button>
       </div>
     </div>
   )

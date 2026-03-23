@@ -25,16 +25,15 @@ export default function Challenge() {
   // 2. Replace the hardcoded "0" below with {count}
   // 3. Wire the + button: onClick={() => setCount(count + 1)}
   // 4. Wire the - button: onClick={() => setCount(count - 1)}
-  const [count, setCount] = useState(0)
 
   return (
     <div>
       <p style={{ fontSize: '3rem', fontWeight: 'bold', textAlign: 'center', margin: '1rem 0' }}>
-        {count}
+        0
       </p>
       <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-        <button onClick={() => setCount(count - 1)}>-</button>
-        <button onClick={() => setCount(count + 1)}>+</button>
+        <button>-</button>
+        <button>+</button>
       </div>
     </div>
   )
