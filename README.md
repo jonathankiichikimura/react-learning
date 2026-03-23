@@ -19,7 +19,7 @@ npm -v
 Clone (or download) the repo, then install dependencies:
 
 ```bash
-git clone <your-repo-url>
+git clone git@github.com:jonathankiichikimura/react-learning.git
 cd react
 npm install
 ```
