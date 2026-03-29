@@ -19,6 +19,15 @@ export const description = {
 
 // TODO:
 // 1. Define a UserCard component here (above or below Challenge — both work)
+function UserCard() {
+  return (
+    <div className="card">
+      <span style={{ fontSize: "3rem" }}>💻</span>
+      <h3>Jonathan</h3>
+      <p>Software Engineer</p>
+    </div>
+  )
+}
 //    It should return a <div className="card"> containing:
 //      - A <span> with an emoji and a large font size
 //      - An <h3> with a name
@@ -29,7 +38,7 @@ export const description = {
 export default function Challenge() {
   return (
     <div>
-      {/* Render your UserCard component here */}
+      <UserCard />
     </div>
   )
 }

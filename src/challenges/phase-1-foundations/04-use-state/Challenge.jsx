@@ -22,6 +22,7 @@ export const description = {
 export default function Challenge() {
   // TODO:
   // 1. Declare state: const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0)
   // 2. Replace the hardcoded "0" below with {count}
   // 3. Wire the + button: onClick={() => setCount(count + 1)}
   // 4. Wire the - button: onClick={() => setCount(count - 1)}
@@ -29,11 +30,11 @@ export default function Challenge() {
   return (
     <div>
       <p style={{ fontSize: '3rem', fontWeight: 'bold', textAlign: 'center', margin: '1rem 0' }}>
-        0
+        {count}
       </p>
       <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-        <button>-</button>
-        <button>+</button>
+        <button onClick={() => setCount(count - 1)}>-</button>
+        <button onClick={() => setCount(count + 1)}>+</button>
       </div>
     </div>
   )

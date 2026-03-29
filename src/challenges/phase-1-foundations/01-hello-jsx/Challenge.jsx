@@ -31,7 +31,8 @@ export default function Challenge() {
 
   return (
     <div>
-      {/* Replace this comment with your JSX */}
+      <h1>Hello!</h1>
+      <p>I am learing React from scratch.</p>
     </div>
   )
 }

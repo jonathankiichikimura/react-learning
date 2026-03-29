@@ -20,13 +20,13 @@ export const description = {
 // 2. Use those props in the JSX instead of hardcoded values
 // 3. Render three different UserCards below with different prop values
 
-function UserCard() {
+function UserCard({ name, role, emoji }) {
   // Add { name, role, emoji } to the parameter list above
   return (
     <div className="card">
-      <span style={{ fontSize: '3rem' }}>🧑‍💻</span>
-      <h3>Jonathan</h3>
-      <p>React Learner</p>
+      <span style={{ fontSize: '3rem' }}>{emoji}</span>
+      <h3>{name}</h3>
+      <p>{role}</p>
     </div>
   )
 }
@@ -34,8 +34,9 @@ function UserCard() {
 export default function Challenge() {
   return (
     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-      {/* Render three UserCards here, each with different name/role/emoji props */}
-      <UserCard />
+      <UserCard name="Jon" role="Software Engineer" emoji="💻"/>
+      <UserCard name="Rob" role="Financial Analyst" emoji="💰"/>
+      <UserCard name="Andrew" role="Senior Software Engineer" emoji="⌨️"/>
     </div>
   )
 }

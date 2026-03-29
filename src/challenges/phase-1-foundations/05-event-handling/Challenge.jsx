@@ -22,13 +22,18 @@ export const description = {
 export default function Challenge() {
   // TODO:
   // 1. Create a liked boolean state: const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(false)
   // 2. Add an onClick handler that toggles liked
   // 3. Use a ternary to display the right emoji and text based on liked
 
+  function handleClick() {
+    setLiked(!liked)
+  }
+
   return (
     <div>
-      <button>
-        🤍 Like · 0 likes
+      <button onClick={handleClick}>
+        {liked ? "❤️ Liked · 1 like" : "🤍 Like · 0 likes"}
       </button>
     </div>
   )

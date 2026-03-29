@@ -18,17 +18,20 @@ export const description = {
   ],
 }
 
+
+
 export default function Challenge() {
   // TODO:
   // 1. Add an isLoggedIn boolean state (starts as false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   // 2. When logged OUT: show a message and a "Log In" button that sets isLoggedIn to true
   // 3. When logged IN: show a welcome message and a "Log Out" button that sets isLoggedIn to false
   // Use a ternary: {isLoggedIn ? (...logged in JSX...) : (...logged out JSX...)}
 
   return (
     <div>
-      <p>You are logged out.</p>
-      <button>Log In</button>
+      <p>{isLoggedIn ? "Welcome back!" : "You are logged out."}</p>
+      <button onClick={() => setIsLoggedIn(!isLoggedIn)}>{isLoggedIn ? "Logout" : "Login"}</button>
     </div>
   )
 }
