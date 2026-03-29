@@ -32,7 +32,7 @@ function ProfileCard() {
 
 function Main() {
   return (
-    <main>
+    <main style={{ display: 'flex', justifyContent: 'center' }}>
       <ProfileCard />
     </main>
   )

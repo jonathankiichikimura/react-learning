@@ -8,12 +8,13 @@ export const description = {
     'ProfileCard can reuse the emoji + name + bio pattern from the previous challenge',
     'All six components must be defined at module scope, not inside each other',
     'Challenge renders: <Header />, <Main />, and <Footer /> in that order',
+    'Main should center its content horizontally — think about which flex properties do that',
   ],
   acceptance: [
     'Logo, Nav, Header, ProfileCard, Main, and Footer are all separate component functions',
     'Challenge renders Header, Main, and Footer',
     'Header composes Logo and Nav',
-    'Main renders ProfileCard',
+    'Main renders ProfileCard, centered horizontally',
     'No component is defined inside another component',
   ],
 }
