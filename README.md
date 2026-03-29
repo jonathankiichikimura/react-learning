@@ -1,6 +1,6 @@
 # React Learning Environment
 
-A challenge-based environment for learning React from scratch — structured as a 28-challenge curriculum targeting new-grad / entry-level React job readiness.
+A challenge-based environment for learning React from scratch — structured as a 50-challenge curriculum targeting new-grad / entry-level React job readiness.
 
 ## Prerequisites
 
@@ -16,10 +16,10 @@ npm -v
 
 ## Installation
 
-Clone (or download) the repo, then install dependencies:
+Fork the repo on GitHub, then clone your fork and install dependencies:
 
 ```bash
-git clone git@github.com:jonathankiichikimura/react-learning.git
+git clone git@github.com:<your-username>/react-learning.git
 cd react
 npm install
 ```
@@ -67,77 +67,99 @@ Each challenge folder also contains a `README.md` with a deeper explanation of t
 
 ## Curriculum
 
-28 challenges across 7 phases. Work through them in order — each phase builds on the last.
+50 challenges across 7 phases. Work through them in order — each phase builds on the last.
 
-### Phase 1 — Foundations (01–07)
+### Phase 1 — Foundations (01–21)
 The mental model. How React thinks about UI.
 
 | # | Challenge | Concepts |
 |---|-----------|---------|
 | 01 | Hello JSX | JSX syntax, returning markup from a component |
-| 02 | Your First Component | Component functions, composition |
-| 03 | Props | Passing data into components, reusability |
-| 04 | useState | State, hooks, re-rendering cycle |
-| 05 | Event Handling | onClick, function references vs calls |
-| 06 | Conditional Rendering | Ternary, `&&`, conditional JSX |
-| 07 | Lists & Keys | `.map()`, the `key` prop, dynamic data |
+| 02 | JSX Expressions | JS expressions in JSX `{}`, dynamic values |
+| 03 | Fragments & className | `<>...</>` fragments, `className` vs `class` |
+| 04 | Your First Component | Component functions, composition |
+| 05 | Component Composition | Nesting components, component trees |
+| 06 | Reusable Stat | Props-driven reusable components |
+| 07 | Props | Passing data into components, reusability |
+| 08 | Props of Different Types | Number, boolean, array props |
+| 09 | Function Props | Callback props, passing functions as props |
+| 10 | useState | State, hooks, re-rendering cycle |
+| 11 | Multiple State Vars | Multiple `useState` calls, independent state |
+| 12 | Object State | State as object, spread updates |
+| 13 | Event Handling | `onClick`, function references vs calls |
+| 14 | The Event Object | `e.target.value`, event properties |
+| 15 | Passing Args to Handlers | Arrow functions in JSX to pass arguments |
+| 16 | Conditional Rendering | Ternary, `&&`, conditional JSX |
+| 17 | The && Operator | Short-circuit rendering, falsy guards |
+| 18 | Multi-branch Rendering | Multiple conditions, if/else in JSX |
+| 19 | Lists & Keys | `.map()`, the `key` prop, dynamic data |
+| 20 | Filtering Lists | `.filter()` + `.map()`, derived lists |
+| 21 | Removing Items | Removing items from state by id |
 
-### Phase 2 — Component Patterns (08–11)
+### Phase 2 — Component Patterns (22–33)
 How real components are structured.
 
 | # | Challenge | Concepts |
 |---|-----------|---------|
-| 08 | Controlled Forms | Controlled inputs, `onSubmit`, `e.preventDefault()` |
-| 09 | Lifting State Up | Sharing state between siblings via parent |
-| 10 | The children Prop | Reusable container/wrapper components |
-| 11 | Derived State | Computing values from state instead of storing duplicates |
+| 22 | Controlled Forms | Controlled inputs, `onSubmit`, `e.preventDefault()` |
+| 23 | Select & Textarea | Controlled `<select>` and `<textarea>` |
+| 24 | Real-time Validation | Validation in `onChange`, inline error messages |
+| 25 | Lifting State Up | Sharing state between siblings via parent |
+| 26 | Shared Display | Shared state pattern with multiple consumers |
+| 27 | Product Configurator | Complex lifting state, multi-input coordination |
+| 28 | The children Prop | Reusable container/wrapper components |
+| 29 | Composable Button | Compound components with `children` |
+| 30 | Accordion | Expandable/collapsible panels with `children` |
+| 31 | Derived State | Computing values from state instead of storing duplicates |
+| 32 | Search Filter | Filtering derived from state, no redundant state |
+| 33 | Text Analyzer | Multiple metrics computed from a single state value |
 
-### Phase 3 — Core Hooks (12–16)
+### Phase 3 — Core Hooks (34–38)
 The hooks that appear in nearly every production codebase.
 
 | # | Challenge | Concepts |
 |---|-----------|---------|
-| 12 | useEffect Basics | Side effects, dependency array |
-| 13 | useEffect Cleanup | Cleanup functions, preventing memory leaks |
-| 14 | useRef | DOM refs, mutable values without re-rendering |
-| 15 | useReducer | Complex state, actions, reducer functions |
-| 16 | Custom Hooks | Extracting stateful logic into reusable `use*` functions |
+| 34 | useEffect Basics | Side effects, dependency array |
+| 35 | useEffect Cleanup | Cleanup functions, preventing memory leaks |
+| 36 | useRef | DOM refs, mutable values without re-rendering |
+| 37 | useReducer | Complex state, actions, reducer functions |
+| 38 | Custom Hooks | Extracting stateful logic into reusable `use*` functions |
 
-### Phase 4 — Data & APIs (17–19)
+### Phase 4 — Data & APIs (39–41)
 Real apps fetch data. Heavily represented in take-home interviews.
 
 | # | Challenge | Concepts |
 |---|-----------|---------|
-| 17 | Fetching Data | `fetch` + `useEffect`, loading/error/data states |
-| 18 | Fetch on Change | Re-fetching when a dependency changes, race condition prevention |
-| 19 | useMemo & useCallback | Memoizing expensive computations and stable function refs |
+| 39 | Fetching Data | `fetch` + `useEffect`, loading/error/data states |
+| 40 | Fetch on Change | Re-fetching when a dependency changes, race condition prevention |
+| 41 | useMemo & useCallback | Memoizing expensive computations and stable function refs |
 
-### Phase 5 — Routing (20–23)
+### Phase 5 — Routing (42–45)
 Every multi-page React app uses React Router. Interviewers assume you know it.
 
 | # | Challenge | Concepts |
 |---|-----------|---------|
-| 20 | Basic Routing | `Routes`, `Route`, `Link` — declarative navigation |
-| 21 | URL Params | `useParams` to read dynamic `:id` segments |
-| 22 | Programmatic Navigation | `useNavigate` to redirect after events |
-| 23 | Protected Routes | Redirect unauthenticated users with `<Navigate>` |
+| 42 | Basic Routing | `Routes`, `Route`, `Link` — declarative navigation |
+| 43 | URL Params | `useParams` to read dynamic `:id` segments |
+| 44 | Programmatic Navigation | `useNavigate` to redirect after events |
+| 45 | Protected Routes | Redirect unauthenticated users with `<Navigate>` |
 
-### Phase 6 — State Management (24–26)
+### Phase 6 — State Management (46–48)
 Once apps grow, local state isn't enough. Three approaches in increasing power.
 
 | # | Challenge | Concepts |
 |---|-----------|---------|
-| 24 | useContext | Sharing data without prop drilling, Provider + Consumer |
-| 25 | Context + useReducer | Lightweight global state pattern |
-| 26 | Zustand | Industry-standard external state library — no Provider needed |
+| 46 | useContext | Sharing data without prop drilling, Provider + Consumer |
+| 47 | Context + useReducer | Lightweight global state pattern |
+| 48 | Zustand | Industry-standard external state library — no Provider needed |
 
-### Phase 7 — Real-World Patterns (27–28)
+### Phase 7 — Real-World Patterns (49–50)
 Performance and code-splitting — topics that come up in senior-leaning interviews.
 
 | # | Challenge | Concepts |
 |---|-----------|---------|
-| 27 | React.memo | Skipping re-renders when props haven't changed |
-| 28 | Lazy Loading | Code splitting with `React.lazy` + `Suspense` |
+| 49 | React.memo | Skipping re-renders when props haven't changed |
+| 50 | Lazy Loading | Code splitting with `React.lazy` + `Suspense` |
 
 ## Stack
 
