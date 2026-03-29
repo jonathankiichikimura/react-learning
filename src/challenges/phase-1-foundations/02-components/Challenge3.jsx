@@ -1,27 +1,35 @@
 export const description = {
-  title: 'Reusable Stat Component',
-  concept: 'Components · Reusability · Repetition without repetition',
-  task: 'Build a Stat component that accepts label and value props, then renders it three times inside a StatsRow. The three stats should be: Repos (42), Followers (108), and Following (55). All three should appear side by side.',
+  title: 'Build a Page Layout',
+  concept: 'Components · Multi-level composition · Component tree · Page structure',
+  task: 'Build a mini page layout using two levels of composition. The outer layer: Challenge renders Header, Main, and Footer. The inner layer: Header composes Logo and Nav; Main renders a ProfileCard. All data is hardcoded — define all six components at module scope.',
   hints: [
-    'Define Stat to accept props: function Stat({ label, value })',
-    'Stat renders the value prominently and the label below it',
-    'StatsRow renders three <Stat> components with different label/value pairs',
-    'Use a flex container for side-by-side layout: style={{ display: "flex", gap: "1rem" }}',
+    'Define leaf components first (Logo, Nav, ProfileCard), then compose them into Header and Main',
+    'Header renders Logo and Nav side by side — use style={{ display: "flex", justifyContent: "space-between" }}',
+    'ProfileCard can reuse the emoji + name + bio pattern from the previous challenge',
+    'All six components must be defined at module scope, not inside each other',
+    'Challenge renders: <Header />, <Main />, and <Footer /> in that order',
   ],
   acceptance: [
-    'A Stat component is defined that accepts label and value props',
-    'Three Stat instances render with different data',
-    'The stats appear side by side (not stacked)',
-    'Repos: 42, Followers: 108, Following: 55',
+    'Logo, Nav, Header, ProfileCard, Main, and Footer are all separate component functions',
+    'Challenge renders Header, Main, and Footer',
+    'Header composes Logo and Nav',
+    'Main renders ProfileCard',
+    'No component is defined inside another component',
   ],
 }
 
-// TODO: Define a Stat component that accepts label and value props
+// TODO: Define all six components here:
+// Logo        → renders the app name (e.g. "★ ReactApp")
+// Nav         → renders two links: Home and About
+// Header      → renders <Logo /> and <Nav /> side by side
+// ProfileCard → renders an emoji, a name, and a short bio
+// Main        → renders <ProfileCard />
+// Footer      → renders "© 2025"
 
 export default function Challenge() {
   return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
-      {/* TODO: Render three <Stat> instances here */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '360px' }}>
+      {/* TODO: Render <Header />, <Main />, and <Footer /> here */}
     </div>
   )
 }
