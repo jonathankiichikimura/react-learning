@@ -27,33 +27,10 @@ export const description = {
 // Main        → renders <ProfileCard />
 // Footer      → renders "© 2025"
 
-function Logo() {
-  return <h3>★ ReactApp</h3>
-}
-
-function Nav() {
-  return (
-    <div style={{display: 'flex', justifyContent: 'space-evenly', gap: '1rem', fontSize: '0.9rem'}}>
-      <a href="#">Home</a>
-      <a href="#">About</a>
-    </div>
-  )
-}
-
-function Header() {
-  return(
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '3.5rem'}}>
-      <Logo />
-      <Nav />
-    </div>
-  )
-}
-
 export default function Challenge() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '360px' }}>
       {/* TODO: Render <Header />, <Main />, and <Footer /> here */}
-      <Header />
     </div>
   )
 }
