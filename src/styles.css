@@ -363,6 +363,22 @@ details[open] > summary::before {
   border-color: #3b82f6;
 }
 
+.preview a {
+  color: #60a5fa;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.preview a:hover {
+  color: #93c5fd;
+  border-bottom-color: #93c5fd;
+}
+
+.preview a:visited {
+  color: #a78bfa;
+}
+
 .preview ul,
 .preview ol {
   padding-left: 1.5rem;
