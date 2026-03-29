@@ -16,11 +16,11 @@ npm -v
 
 ## Installation
 
-Fork the repo on GitHub, then clone your fork and install dependencies:
+Fork the repo on GitHub, then install dependencies:
 
 ```bash
-git clone git@github.com:<your-username>/react-learning.git
-cd react
+gh repo fork jonathankiichikimura/react-learning --clone
+cd react-learning
 npm install
 ```
 
