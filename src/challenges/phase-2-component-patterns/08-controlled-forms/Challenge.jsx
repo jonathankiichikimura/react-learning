@@ -22,10 +22,11 @@ export const description = {
 
 export default function Challenge() {
   // TODO:
-  // 1. Create state for name, email, password (and maybe a submitted flag)
-  // 2. Wire each input's value and onChange
-  // 3. Disable the button when any field is empty
-  // 4. Handle form submission: prevent default, then show the success message
+  // 1. Add state for each field and track whether the form was submitted
+  // 2. Show a success message instead of the form after submission
+  // 3. Wire each input as a controlled component
+  // 4. Disable the button when any field is empty
+  // 5. Handle form submission — prevent the default browser behavior
 
   return (
     <form>

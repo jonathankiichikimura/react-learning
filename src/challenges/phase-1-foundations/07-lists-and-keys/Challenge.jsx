@@ -30,19 +30,18 @@ const initialTodos = [
 
 export default function Challenge() {
   // TODO:
-  // 1. Create state for todos: const [todos, setTodos] = useState(initialTodos)
-  // 2. Create state for the input: const [input, setInput] = useState("")
-  // 3. Render todos with .map() — don't forget the key prop!
-  // 4. Wire the input's onChange to update input state
-  // 5. Wire the "Add" button to append a new todo and clear the input
+  // 1. Add state for the todo list and the current input value
+  // 2. Render the list dynamically — don't forget the key prop
+  // 3. Wire up the input to track what the user is typing
+  // 4. Wire up the button to add new todos and clear the input
 
   return (
     <div>
       <ul>
-        {/* Replace this with a .map() over your todos state */}
-        {initialTodos.map(todo => (
-          <li>{todo.text}</li>
-        ))}
+        {/* TODO: Replace this with todos.map(...) */}
+        <li>Item one</li>
+        <li>Item two</li>
+        <li>Item three</li>
       </ul>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>

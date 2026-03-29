@@ -344,6 +344,11 @@ details[open] > summary::before {
   background: #2e2e2e;
 }
 
+.preview button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .preview input {
   padding: 0.4rem 0.7rem;
   border: 1px solid #3a3a3a;

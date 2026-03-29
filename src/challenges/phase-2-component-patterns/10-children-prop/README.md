@@ -2,7 +2,7 @@
 
 ## What is the children prop?
 
-Every React component automatically receives a special prop called `children`. It contains whatever JSX is placed between the component's opening and closing tags:
+Every React component automatically receives a special prop called `children`. It contains whatever JSX is placed between the component's opening and closing tags.
 
 ```jsx
 <Panel title="Stats">
@@ -18,82 +18,298 @@ function Panel({ title, children }) {
   return (
     <div className="panel">
       <h3>{title}</h3>
-      <div>{children}</div>
+      <div>{children}</div>  {/* renders whatever was passed between the tags */}
     </div>
   )
 }
 ```
 
-## Why this matters: composition
-
-`children` is what enables **composition** — building components that wrap around arbitrary content without knowing what that content is. The Panel doesn't care what's inside it. It could be text, a form, a chart, another component — anything.
-
-This is more flexible than trying to anticipate every possible combination of props upfront.
+These two ways of passing children are equivalent:
 
 ```jsx
-// Without children — you'd need to predict every type of content
-<Panel textContent="Hello" hasButton buttonLabel="Click" />
+// Between the tags (standard)
+<Wrapper>hello</Wrapper>
 
-// With children — the parent decides what goes inside
+// As an explicit prop (unusual but valid)
+<Wrapper children="hello" />
+```
+
+---
+
+## Why this matters: composition
+
+`children` enables **composition** — building components that wrap around arbitrary content without needing to know what that content is. A Panel doesn't care what's inside it. It could be text, a form, a chart, another component — anything.
+
+```jsx
+// Without children — you'd have to predict every possible type of content
+<Panel textContent="Hello" hasButton buttonLabel="Click me" showList listItems={[...]} />
+
+// With children — the parent decides what goes inside, Panel just wraps it
 <Panel title="Welcome">
   <p>Hello</p>
-  <button>Click</button>
+  <button>Click me</button>
+  <ul>...</ul>
 </Panel>
 ```
 
-## Real-world examples
+The `children` approach scales infinitely. The props approach breaks down as soon as you need something new.
 
-You'll see this pattern constantly in production code:
+---
+
+## Wrapper and layout components
+
+`children` is the backbone of layout and container components. You'll see this pattern everywhere:
 
 ```jsx
-// Layout wrappers
-<Container maxWidth="lg">
-  <Dashboard />
-</Container>
+// Modal dialog — the content changes but the chrome stays the same
+function Modal({ title, children }) {
+  return (
+    <div className="modal-overlay">
+      <div className="modal">
+        <h2>{title}</h2>
+        <div className="modal-body">{children}</div>
+      </div>
+    </div>
+  )
+}
 
-// Modal dialogs
 <Modal title="Confirm Delete">
   <p>Are you sure? This cannot be undone.</p>
-  <Button onClick={handleDelete}>Delete</Button>
+  <button onClick={handleDelete}>Delete</button>
 </Modal>
-
-// Cards
-<Card>
-  <Chart data={data} />
-</Card>
-
-// Buttons with icons
-<Button>
-  <Icon name="save" /> Save
-</Button>
 ```
+
+```jsx
+// Page layout — controls the skeleton, children fills in the content
+function PageLayout({ children }) {
+  return (
+    <div>
+      <Header />
+      <main style={{ maxWidth: '960px', margin: '0 auto' }}>
+        {children}
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+<PageLayout>
+  <Dashboard />
+</PageLayout>
+```
+
+```jsx
+// Card container
+function Card({ children }) {
+  return (
+    <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '1rem' }}>
+      {children}
+    </div>
+  )
+}
+
+<Card>
+  <h3>Revenue</h3>
+  <Chart data={revenueData} />
+</Card>
+```
+
+---
+
+## Named slots alongside children
+
+You can combine `children` with other JSX props for more complex layouts — this is sometimes called the "slot" pattern:
+
+```jsx
+function Modal({ title, footer, children }) {
+  return (
+    <div className="modal">
+      <div className="modal-header">{title}</div>
+      <div className="modal-body">{children}</div>
+      <div className="modal-footer">{footer}</div>
+    </div>
+  )
+}
+
+<Modal
+  title={<h2>Confirm</h2>}
+  footer={
+    <>
+      <button onClick={onCancel}>Cancel</button>
+      <button onClick={onConfirm}>Confirm</button>
+    </>
+  }
+>
+  <p>Are you sure you want to delete this item?</p>
+</Modal>
+```
+
+`children` fills the body; `footer` fills the footer slot; `title` fills the header. None of these need to be strings.
+
+---
 
 ## children can be anything
 
 ```jsx
-// Text
+// Plain text
 <Label>First name</Label>
 
-// Multiple elements
-<Card>
-  <h2>Title</h2>
-  <p>Content</p>
-</Card>
-
-// A single component
+// A single element
 <Wrapper><MyForm /></Wrapper>
 
-// An array of components (you need keys in this case)
+// Multiple elements (React merges them automatically)
+<Card>
+  <h2>Title</h2>
+  <p>Subtitle</p>
+  <img src="..." />
+</Card>
+
+// A mapped array (needs keys on the items, not on the wrapper)
 <List>
   {items.map(item => <Item key={item.id} item={item} />)}
 </List>
+
+// Mixed content
+<Button>
+  <Icon name="save" /> Save Changes
+</Button>
 ```
 
-## Composition vs inheritance
+---
 
-React favors **composition** (wrapping components inside others) over **inheritance** (extending classes). If you ever feel tempted to extend a React component, use the `children` prop and composition instead.
+## Guarding against missing children
+
+If children might not be passed, guard before rendering:
+
+```jsx
+function Panel({ title, children }) {
+  return (
+    <div>
+      <h3>{title}</h3>
+      {children
+        ? <div className="body">{children}</div>
+        : <p className="empty">Nothing here yet.</p>
+      }
+    </div>
+  )
+}
+```
+
+Or use a default:
+
+```jsx
+function Panel({ title, children = <p>Empty panel</p> }) {
+  return (
+    <div>
+      <h3>{title}</h3>
+      {children}
+    </div>
+  )
+}
+```
+
+---
+
+## children vs prop drilling
+
+One underappreciated use of `children`: it lets you pass JSX through an intermediate component without that component needing to know about it.
+
+```jsx
+// ❌ Without children — Layout has to know about and pass along UserProfile
+function Layout({ user }) {
+  return (
+    <div>
+      <Sidebar />
+      <UserProfile user={user} />  {/* Layout is coupled to UserProfile */}
+    </div>
+  )
+}
+
+// ✅ With children — Layout is generic, the parent decides the content
+function Layout({ children }) {
+  return (
+    <div>
+      <Sidebar />
+      {children}  {/* Layout doesn't know or care what this is */}
+    </div>
+  )
+}
+
+// The parent composes them:
+<Layout>
+  <UserProfile user={user} />
+</Layout>
+```
+
+This avoids a form of prop drilling — the intermediate `Layout` component no longer needs to accept and forward `user`.
+
+---
+
+## Composition over inheritance
+
+React favors **composition** (wrapping components inside each other using `children`) over **inheritance** (extending classes). If you ever feel the urge to do `class MyButton extends Button`, use `children` and composition instead — it's more flexible and easier to understand.
+
+---
 
 ## Common mistakes
 
-- Naming it something other than `children` when receiving it as a prop — it's always `children`
-- Forgetting that `children` can be `undefined` if nothing is passed between the tags — guard with `{children && ...}` if needed
+```jsx
+// ❌ Forgetting to render children — content silently disappears
+function Panel({ title, children }) {
+  return <div><h3>{title}</h3></div>  // children never rendered!
+}
+
+// ✅
+function Panel({ title, children }) {
+  return <div><h3>{title}</h3>{children}</div>
+}
+```
+
+```jsx
+// ❌ Trying to pass children as a normal prop name
+<Panel title="Stats" content={<p>Users: 100</p>} />
+// ...and then accessing props.content instead of props.children
+
+// ✅ Use children for the main content slot
+<Panel title="Stats"><p>Users: 100</p></Panel>
+```
+
+```jsx
+// ❌ Not guarding when children could be undefined
+function Tooltip({ children }) {
+  return <div className="tooltip">{children.toUpperCase()}</div>
+  // Crashes if children is a React element, not a string
+}
+
+// ✅ Don't call methods on children — just render it
+function Tooltip({ children }) {
+  return <div className="tooltip">{children}</div>
+}
+```
+
+```jsx
+// ❌ Wrapping in unnecessary extra divs instead of using children
+function Card({ content }) {
+  return <div className="card"><div>{content}</div></div>
+}
+// Called as: <Card content={<p>Hello</p>} />
+
+// ✅ Use children for natural composition
+function Card({ children }) {
+  return <div className="card">{children}</div>
+}
+// Called as: <Card><p>Hello</p></Card>
+```
+
+```jsx
+// ❌ Assuming children is always a single element — it can be an array
+function Wrapper({ children }) {
+  return <div onClick={() => children.props.onClick()}>...</div>
+  // Crashes if multiple children are passed
+}
+
+// ✅ Just render children — let React handle it
+function Wrapper({ children }) {
+  return <div>{children}</div>
+}
+```

@@ -16,17 +16,17 @@ export const description = {
 }
 
 // TODO:
-// 1. Update UserCard to accept { name, role, emoji } as props
-// 2. Use those props in the JSX instead of hardcoded values
-// 3. Render three different UserCards below with different prop values
+// 1. Update UserCard to accept name, role, and emoji as props
+// 2. Replace the hardcoded values with the props
+// 3. Render three different <UserCard /> instances below with different data
 
 function UserCard() {
-  // Add { name, role, emoji } to the parameter list above
+  // TODO: Accept props here
   return (
     <div className="card">
-      <span style={{ fontSize: '3rem' }}>🧑‍💻</span>
-      <h3>Jonathan</h3>
-      <p>React Learner</p>
+      <span style={{ fontSize: '3rem' }}>🙂</span>
+      <h3>Name goes here</h3>
+      <p>Role goes here</p>
     </div>
   )
 }
@@ -34,8 +34,7 @@ function UserCard() {
 export default function Challenge() {
   return (
     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-      {/* Render three UserCards here, each with different name/role/emoji props */}
-      <UserCard />
+      {/* TODO: Render three <UserCard /> instances with different props */}
     </div>
   )
 }

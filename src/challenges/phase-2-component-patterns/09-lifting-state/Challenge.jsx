@@ -21,9 +21,9 @@ export const description = {
 }
 
 // TODO:
-// 1. Keep a single temperature value in state (pick either Celsius or Fahrenheit as the stored unit)
-// 2. Pass the converted value and an onChange handler into each input below
-// 3. Each onChange should convert from its unit to the stored unit, then call setState
+// 1. Add a single state variable for one temperature unit
+// 2. Pass the converted value and an onChange handler down to each input
+// 3. Each input's onChange should convert and update the shared state
 
 function CelsiusInput({ value, onChange }) {
   // This component is done — don't change it

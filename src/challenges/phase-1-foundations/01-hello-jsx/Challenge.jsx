@@ -16,22 +16,9 @@ export const description = {
 }
 
 export default function Challenge() {
-  // TODO: Return JSX below.
-  //
-  // A component is a function that returns what should appear on screen.
-  // JSX looks almost identical to HTML. Try returning a <div> that contains
-  // an <h1> and a <p>.
-  //
-  // Example of JSX:
-  //   return (
-  //     <div>
-  //       <h1>Some heading</h1>
-  //     </div>
-  //   )
-
   return (
     <div>
-      {/* Replace this comment with your JSX */}
+      {/* TODO: Add a heading and a paragraph */}
     </div>
   )
 }

@@ -21,9 +21,9 @@ export const description = {
 
 export default function Challenge() {
   // TODO:
-  // 1. Create a liked boolean state: const [liked, setLiked] = useState(false)
-  // 2. Add an onClick handler that toggles liked
-  // 3. Use a ternary to display the right emoji and text based on liked
+  // 1. Add a boolean state to track whether the post is liked
+  // 2. Wire up the button to toggle the liked state
+  // 3. Display different content based on whether it's liked or not
 
   return (
     <div>

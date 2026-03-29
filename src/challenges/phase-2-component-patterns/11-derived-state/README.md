@@ -1,63 +1,274 @@
 # 11 — Derived State
 
-## What is derived state?
+## The core principle
 
-Derived state is any value that can be **computed from existing state**. The rule is simple: if you can calculate it from state you already have, don't store it as separate state.
+If you can compute a value from existing state, don't store it as separate state.
 
 ```jsx
-// ❌ Storing derived state — redundant and error-prone
-const [items, setItems] = useState([])
-const [total, setTotal] = useState(0)  // derives from items — don't do this
+// ❌ Storing derived state — total is redundant and can go out of sync
+const [items, setItems]   = useState([])
+const [total, setTotal]   = useState(0)  // always computable from items
 
-// ✅ Computing it on the fly
+// ✅ Computing it fresh on every render — always correct, zero extra code
 const [items, setItems] = useState([])
 const total = items.reduce((sum, item) => sum + item.price * item.qty, 0)
 ```
 
-## Why redundant state is a problem
+The computed version is always guaranteed to match the items. The stored version requires you to remember to call `setTotal` every time items change.
 
-When you store derived values as state, you have to keep them in sync manually. Every time `items` changes, you need to remember to also call `setTotal`. This is easy to forget, especially as code grows. The result is bugs where the UI shows stale or incorrect values.
+---
+
+## Why redundant state is a bug waiting to happen
+
+Every time you have two state variables that should always match, you create an obligation: every function that changes one must also update the other. Miss one update anywhere and your UI shows wrong data.
 
 ```jsx
+// ❌ The obligation trap — easy to miss one
 function addItem(newItem) {
   setItems([...items, newItem])
-  setTotal(total + newItem.price)  // easy to forget; easy to get wrong
+  setTotal(total + newItem.price)  // forget this and total is wrong
+}
+
+function removeItem(id) {
+  const removed = items.find(i => i.id === id)
+  setItems(items.filter(i => i.id !== id))
+  setTotal(total - removed.price)  // forget this and total is wrong
+}
+
+function updateQty(id, qty) {
+  // Now you have to compute the delta... this gets complicated fast
+}
+
+// ✅ The derived approach — nothing to sync
+function addItem(newItem) {
+  setItems([...items, newItem])
+  // total recomputes automatically — no extra work
 }
 ```
 
-The computed approach is always correct because it recalculates fresh from the source data on every render.
+---
 
-## Identifying derived state
+## Recognizing derived state
 
-Ask yourself: "If I had only X, could I produce Y?" If yes, Y is derived from X.
+Ask: "If I had only X, could I calculate Y without any additional information?" If yes, Y is derived from X.
 
-| Derived value | Source |
-|--------------|--------|
-| Cart total | Items + quantities |
-| Number of completed todos | Todo list |
-| Filtered results | Full list + filter term |
-| Full name | First name + last name |
-| Is form valid | Field values |
+| Value | Source | Derived? |
+|-------|--------|----------|
+| Cart total | Items + quantities | ✅ Yes |
+| Number of completed todos | Todo list | ✅ Yes |
+| Filtered results | Full list + search term | ✅ Yes |
+| Full name | First name + last name | ✅ Yes |
+| Is form valid | Field values | ✅ Yes |
+| Word count | Text string | ✅ Yes |
+| Selected item details | selectedId + items array | ✅ Yes (`items.find(i => i.id === selectedId)`) |
+| Validation errors | Field values | ✅ Yes |
+| User's current page | Page number state | ✅ Yes (pageItems = allItems.slice((page-1)*10, page*10)) |
+| User's name | — | ❌ No — must be stored |
+| Current timestamp | — | ❌ No — must be stored or fetched |
+| API response data | — | ❌ No — must be stored |
 
-## Computing in JSX or before the return
+---
 
-Both work. Use whichever is clearer:
+## Common derivation patterns
+
+### Aggregating with `.reduce()`
 
 ```jsx
-// Computed inline in JSX
-<p>Total: ${items.reduce((s, i) => s + i.price * i.qty, 0)}</p>
-
-// Computed before the return (better for reuse or readability)
-const total = items.reduce((s, i) => s + i.price * i.qty, 0)
-return <p>Total: ${total}</p>
+const total = items.reduce((sum, item) => sum + item.price * item.qty, 0)
+const totalWords = paragraphs.reduce((sum, p) => sum + p.wordCount, 0)
 ```
 
-## When `useMemo` helps
+### Filtering with `.filter()`
 
-Derived values recompute on every render. For most data this is instant. If the computation is genuinely expensive (thousands of items, complex math), `useMemo` caches the result so it only recomputes when the source data changes. This is covered in challenge 19.
+```jsx
+const completedTodos = todos.filter(t => t.done)
+const activeTodos    = todos.filter(t => !t.done)
+const searchResults  = items.filter(i => i.name.toLowerCase().includes(query.toLowerCase()))
+```
+
+### Finding a single item with `.find()`
+
+```jsx
+const selectedItem = items.find(i => i.id === selectedId)
+// Use selectedItem.name, selectedItem.price, etc. — no extra state needed
+```
+
+### Transforming with `.map()`
+
+```jsx
+// Normalize for display — no need to store a separate "display" array
+const displayItems = items.map(item => ({
+  ...item,
+  formattedPrice: `$${item.price.toFixed(2)}`,
+  isOnSale: item.price < item.originalPrice,
+}))
+```
+
+### Computing from strings
+
+```jsx
+const charCount     = text.length
+const wordCount     = text.trim() ? text.trim().split(/\s+/).length : 0
+const sentenceCount = (text.match(/[.!?]+/g) || []).length
+const isEmpty       = text.trim().length === 0
+```
+
+### Derived booleans
+
+```jsx
+const isFormValid  = name.trim().length > 0 && email.includes('@')
+const hasSelection = selectedIds.length > 0
+const isOverBudget = total > budget
+```
+
+---
+
+## Where to compute: before return vs inline
+
+Both are valid — pick whichever reads more clearly.
+
+```jsx
+// Compute before return — good when the value is reused or complex
+export default function Cart() {
+  const [items, setItems] = useState(initialItems)
+
+  const total      = items.reduce((sum, i) => sum + i.price * i.qty, 0)
+  const itemCount  = items.reduce((sum, i) => sum + i.qty, 0)
+  const isEmpty    = items.length === 0
+
+  return (
+    <div>
+      <p>{itemCount} items</p>
+      {isEmpty ? <p>Your cart is empty</p> : <ItemList items={items} />}
+      <p>Total: ${total}</p>
+    </div>
+  )
+}
+```
+
+```jsx
+// Inline — fine for simple, one-off values
+return (
+  <p>
+    {todos.filter(t => !t.done).length} tasks remaining
+  </p>
+)
+```
+
+---
+
+## The two-state anti-pattern: how they drift
+
+A common failure mode: store the same information twice and forget to sync one of the copies.
+
+```jsx
+// ❌ Two states that must always agree — they won't
+const [todos, setTodos]             = useState(initialTodos)
+const [completedCount, setCompleted] = useState(0)
+
+function toggleTodo(id) {
+  const updated = todos.map(t =>
+    t.id === id ? { ...t, done: !t.done } : t
+  )
+  setTodos(updated)
+  // Forgot to update completedCount!
+  // Now completedCount is stale
+}
+
+// ✅ One state, one derivation
+const [todos, setTodos] = useState(initialTodos)
+const completedCount = todos.filter(t => t.done).length  // always correct
+```
+
+---
+
+## useMemo — the escape hatch for expensive derivations
+
+Derived values recompute on every render. For most data this is instant (microseconds). If you have genuinely expensive computation — filtering 100,000 records, complex math on large datasets — `useMemo` caches the result:
+
+```jsx
+import { useMemo } from 'react'
+
+const expensiveResult = useMemo(() => {
+  return hugeList.filter(item => complexCondition(item))
+}, [hugeList, complexCondition])
+// Only recomputes when hugeList or complexCondition changes
+```
+
+**When to reach for useMemo:**
+- The computation is measurably slow (profile first!)
+- The list has thousands of items
+- The computation runs inside a frequently re-rendering component
+
+**When NOT to use useMemo:**
+- For simple derivations like `.length`, `.filter()` on small arrays, string operations
+- Premature optimization — most computations are fast enough without it
+- As a default for all derived values — it adds complexity and is often unnecessary
+
+Covered in depth in Challenge 19.
+
+---
 
 ## Common mistakes
 
-- Storing counts, totals, filtered lists, or any other computed value as state
-- Keeping a `fullName` state when you have `firstName` and `lastName` states — just compute it
-- Forgetting that computed values are always in sync with their source — you never need to "update" them manually
+```jsx
+// ❌ Storing a filtered list in state
+const [items, setItems]     = useState(allItems)
+const [filtered, setFiltered] = useState(allItems)  // redundant!
+
+function handleSearch(q) {
+  setFiltered(items.filter(i => i.name.includes(q)))
+}
+
+// ✅ Derive it during render
+const [items, setItems] = useState(allItems)
+const [query, setQuery] = useState('')
+const filtered = items.filter(i => i.name.includes(query))
+```
+
+```jsx
+// ❌ Storing a count that can be computed
+const [todos, setTodos]     = useState([])
+const [todoCount, setCount] = useState(0)
+
+// ✅ Just compute it
+const [todos, setTodos] = useState([])
+const todoCount = todos.length
+```
+
+```jsx
+// ❌ Calling setState inside render to sync derived state — causes an infinite loop!
+function Component() {
+  const [items, setItems] = useState([])
+  const [total, setTotal] = useState(0)
+
+  // DON'T DO THIS — it triggers another render, which runs this again, forever
+  setTotal(items.reduce((s, i) => s + i.price, 0))
+}
+
+// ✅ Just compute it — no setState needed
+function Component() {
+  const [items, setItems] = useState([])
+  const total = items.reduce((s, i) => s + i.price, 0)
+}
+```
+
+```jsx
+// ❌ Storing selectedItem when you already have selectedId + items
+const [items, setItems]           = useState([])
+const [selectedId, setSelectedId] = useState(null)
+const [selectedItem, setSelected] = useState(null)  // redundant!
+
+// ✅ Derive selectedItem from selectedId
+const selectedItem = items.find(i => i.id === selectedId) ?? null
+```
+
+```jsx
+// ❌ Computing the derived value as state to "avoid recomputing"
+// This is premature optimization that creates sync bugs
+const [sortedItems, setSorted] = useState([...items].sort(compareFn))
+
+// ✅ Compute it — sorting is fast unless you have thousands of items
+const sortedItems = [...items].sort(compareFn)
+// Use useMemo only if profiling shows it's actually slow
+```
