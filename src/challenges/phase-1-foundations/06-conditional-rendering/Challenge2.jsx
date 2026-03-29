@@ -23,7 +23,7 @@ export default function Challenge() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '340px' }}>
-      {/* TODO: Use && to show the banner only when count > 0 */}
+      {/* TODO: Only show the banner when there are unread messages */}
       <div style={{
         background: '#1e3a5f',
         border: '1px solid #3b82f6',

@@ -28,8 +28,7 @@ const LANGUAGES = [
 export default function Challenge() {
   const [query, setQuery] = useState('')
 
-  // TODO: Derive filtered list from LANGUAGES and query — don't store it in state
-  // const filtered = LANGUAGES.filter(...)
+  // TODO: Derive the filtered list from the query — don't store it in state
 
   return (
     <div style={{ maxWidth: '280px' }}>
@@ -39,12 +38,12 @@ export default function Challenge() {
         placeholder="Search languages..."
         style={{ width: '100%', marginBottom: '0.75rem' }}
       />
-      {/* TODO: Show match count using filtered.length */}
+      {/* TODO: Show how many languages match the current query */}
       <p style={{ fontSize: '0.8rem', color: '#555', marginBottom: '0.5rem' }}>
         {LANGUAGES.length} languages
       </p>
       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.3rem', maxHeight: '200px', overflowY: 'auto' }}>
-        {/* TODO: map over filtered, not LANGUAGES */}
+        {/* TODO: Render your derived list here instead */}
         {LANGUAGES.map(lang => (
           <li key={lang} style={{ padding: '0.3rem 0.5rem', borderRadius: '4px', background: '#1a1a1a', fontSize: '0.9rem' }}>
             {lang}

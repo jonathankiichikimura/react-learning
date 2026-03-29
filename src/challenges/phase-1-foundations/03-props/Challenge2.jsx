@@ -17,24 +17,12 @@ export const description = {
   ],
 }
 
-// TODO: Build a ProductCard component that accepts name, price, inStock props
-function ProductCard({ name, price, inStock }) {
-  return(
-    <div className="card">
-      <h3>{name}</h3>
-      <p>Price: {price}</p>
-      <p style={inStock ? { "color": "green" } : { "color": "red" }}>{inStock ? "In Stock ✓" : "Out of Stock ✗"}</p>
-    </div>
-  )
-}
-
+// TODO: Build a ProductCard component that accepts name, price, and inStock props
 
 export default function Challenge() {
   return (
     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-      {/* TODO: Render two ProductCard components with different data */}
-      <ProductCard name="PSU" price={200} inStock={true} />
-      <ProductCard name="RAM" price={9999} inStock={false} />
+      {/* TODO: Render two <ProductCard> instances with different data */}
     </div>
   )
 }

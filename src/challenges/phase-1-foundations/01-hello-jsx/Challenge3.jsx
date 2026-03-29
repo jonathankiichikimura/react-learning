@@ -17,18 +17,9 @@ export const description = {
 }
 
 export default function Challenge() {
-  // TODO: Replace the <div> wrapper with a Fragment (<>)
-  // and render two <section className="card"> elements inside it
   return (
-    <>
-      <section className="card">
-        <h3>Card One</h3>
-        <p>Replace the outer div with a Fragment</p>
-      </section>
-      <section className="card">
-        <h3>Card Two</h3>
-        <p>This is the second card</p>
-      </section>
-    </>
+    <div>
+      {/* TODO: Replace this wrapper and render two card sections without a wrapping div */}
+    </div>
   )
 }

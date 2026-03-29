@@ -6,7 +6,7 @@ export const description = {
   task: 'Build a ColorSwatch component that accepts color (string) and onSelect (function) props. Render 5 swatches in different colors. Clicking a swatch calls onSelect(color). Display the currently selected color name below the swatches.',
   hints: [
     'ColorSwatch receives color and onSelect: function ColorSwatch({ color, onSelect })',
-    'The swatch is a div/button with backgroundColor: color set via inline style',
+    'The swatch is a div with backgroundColor: color set via inline style',
     'Call onSelect from the onClick: onClick={() => onSelect(color)}',
     'The parent (Challenge) manages selectedColor state and passes onSelect down',
     'Display selectedColor below: {selectedColor ? selectedColor : "None selected"}',
@@ -19,9 +19,9 @@ export const description = {
   ],
 }
 
-// TODO: Build a ColorSwatch component that accepts color and onSelect props
-
 const colors = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#60a5fa']
+
+// TODO: Build a ColorSwatch component that accepts color and onSelect props
 
 export default function Challenge() {
   const [selectedColor, setSelectedColor] = useState(null)
@@ -29,8 +29,7 @@ export default function Challenge() {
   return (
     <div>
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-        {/* TODO: Map over colors and render a ColorSwatch for each */}
-        <p>Render swatches here</p>
+        {/* TODO: Map over colors and render a <ColorSwatch> for each */}
       </div>
       <p>Selected: {selectedColor ?? 'None'}</p>
     </div>

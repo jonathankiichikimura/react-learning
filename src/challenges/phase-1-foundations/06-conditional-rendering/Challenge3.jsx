@@ -23,9 +23,7 @@ export default function Challenge() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  // TODO: Add early returns for loading and error states BEFORE the main return
-  // if (loading) return ...
-  // if (error) return ...
+  // TODO: Handle the loading and error states before the main return
 
   return (
     <div>

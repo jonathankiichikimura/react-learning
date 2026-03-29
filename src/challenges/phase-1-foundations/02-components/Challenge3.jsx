@@ -17,22 +17,11 @@ export const description = {
 }
 
 // TODO: Define a Stat component that accepts label and value props
-function Stat ({ label, value }) {
-  return (
-    <div className="card">
-      <h1>{value}</h1>
-      <p>{label}</p>
-    </div>
-  )
-}
 
 export default function Challenge() {
-  // TODO: Render three <Stat> instances inside a flex container
   return (
     <div style={{ display: 'flex', gap: '1rem' }}>
-      <Stat label="Repo" value={42}></Stat>
-      <Stat label="Followers" value={108}></Stat>
-      <Stat label="Following" value={55}></Stat>
+      {/* TODO: Render three <Stat> instances here */}
     </div>
   )
 }

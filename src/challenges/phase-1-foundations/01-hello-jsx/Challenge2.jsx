@@ -22,14 +22,9 @@ export default function Challenge() {
 
   return (
     <div className="card">
-      {/* TODO: Display 6 * 7 inside a <p> */}
-      <p>Math result: {6 * 7}</p>
-
-      {/* TODO: Display author in ALL CAPS using .toUpperCase() */}
-      <p>Author: {author.toUpperCase()}</p>
-
-      {/* TODO: Display a sentence using a template literal, e.g. "I am learning react" */}
-      <p>I am learning {language}</p>
+      {/* TODO: Embed a math result in a paragraph */}
+      {/* TODO: Render the author variable transformed to uppercase */}
+      {/* TODO: Render a sentence built from a template literal */}
     </div>
   )
 }

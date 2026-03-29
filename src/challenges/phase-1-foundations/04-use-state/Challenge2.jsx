@@ -19,17 +19,10 @@ export const description = {
 }
 
 export default function Challenge() {
-  // TODO: Create state for the current light color ("red", "yellow", or "green")
-  // TODO: Derive the emoji and next state from the current state
-
   return (
     <div style={{ textAlign: 'center' }}>
-      {/* TODO: Show the light emoji */}
-      <p style={{ fontSize: '4rem' }}>🔴</p>
-      {/* TODO: Show the color name */}
-      <p>Red</p>
-      {/* TODO: Wire up the button to advance the light */}
-      <button>Next</button>
+      {/* TODO: Add state for the current light, show its emoji and name,
+               and wire up the button to cycle to the next light */}
     </div>
   )
 }

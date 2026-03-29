@@ -18,32 +18,11 @@ export const description = {
 }
 
 // TODO: Define Avatar, DisplayName, and Bio components here
-function Avatar({emoji}) {
-  return (
-    <span style={{ fontSize: "3rem"}}>{emoji}</span>
-  )
-}
-
-function DisplayName ({name}) {
-  return (
-    <h3>{name}</h3>
-  )
-}
-
-function Bio () {
-  return (
-    <p>Some description is here but I'm lazy</p>
-  )
-}
 
 export default function Challenge() {
-  // TODO: Render Avatar, DisplayName, and Bio inside a div
-  const name = "Jon"
   return (
     <div className="card">
-      <Avatar emoji="💻"></Avatar>
-      <DisplayName name={name}></DisplayName>
-      <Bio></Bio>
+      {/* TODO: Render <Avatar />, <DisplayName />, and <Bio /> here */}
     </div>
   )
 }

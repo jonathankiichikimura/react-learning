@@ -24,11 +24,9 @@ export default function Challenge() {
   const [username, setUsername] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  // TODO: Derive validation state — never store errors as separate state
-  // const tooShort    = username.length > 0 && username.length < 3
-  // const tooLong     = username.length > 20
-  // const invalidChars = username.length > 0 && /[^a-zA-Z0-9_]/.test(username)
-  // const isValid     = username.length >= 3 && !tooLong && !invalidChars
+  // TODO: Derive your validation flags from username — don't store them as state
+  // Think about: is it too short? too long? does it have invalid characters?
+  // Then derive isValid from those flags
 
   function handleSubmit(e) {
     e.preventDefault()

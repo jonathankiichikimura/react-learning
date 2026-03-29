@@ -23,11 +23,7 @@ export const description = {
 export default function Challenge() {
   const [text, setText] = useState('')
 
-  // TODO: Derive all four stats from text — do not store them in state
-  // const charCount     = text.length
-  // const wordCount     = text.trim() ? text.trim().split(/\s+/).length : 0
-  // const sentenceCount = (text.match(/[.!?]+/g) || []).length
-  // const readingTime   = wordCount === 0 ? 0 : Math.ceil(wordCount / 200)
+  // TODO: Derive all four stats from text — do not store them as state
 
   return (
     <div style={{ maxWidth: '380px' }}>

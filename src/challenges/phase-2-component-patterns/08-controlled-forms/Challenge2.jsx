@@ -27,7 +27,7 @@ export default function Challenge() {
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  // TODO: write handleSubmit — call e.preventDefault() and set submitted to true
+  // TODO: Write a handleSubmit function
 
   if (submitted) {
     // TODO: show a confirmation with category and message
@@ -55,7 +55,7 @@ export default function Challenge() {
           placeholder="Describe your feedback..."
           style={{ padding: '0.4rem 0.6rem', background: '#1a1a1a', color: '#ddd', border: '1px solid #3a3a3a', borderRadius: '5px', resize: 'vertical', fontFamily: 'inherit' }}
         />
-        {/* TODO: show character count derived from message.length */}
+        {/* TODO: Show a live character count */}
         <span style={{ color: '#555', fontSize: '0.75rem' }}>0 characters</span>
       </label>
 

@@ -3,11 +3,11 @@ import { useState } from 'react'
 export const description = {
   title: 'Passing Args to Handlers',
   concept: 'onClick · Arrow functions · Passing arguments · Dynamic handlers',
-  task: "Render 6 colored swatches as clickable buttons. Clicking a swatch sets a preview box to that color. Use the pattern onClick={() => handleSelect(color)} to pass the specific color to the handler. Show the selected color's hex value below.",
+  task: 'Render 6 colored swatches as clickable buttons. Clicking a swatch sets a preview box to that color. Use the pattern onClick={() => handleSelect(color)} to pass the specific color to the handler. Show the selected color\'s hex value below.',
   hints: [
     'Use onClick={() => handleSelect(color)} — the arrow function lets you pass the value',
     'Do NOT write onClick={handleSelect(color)} — that calls the function immediately on render!',
-    'Each swatch is a div or button with backgroundColor set via inline style',
+    'Each swatch is a div with backgroundColor set via inline style',
     'Store the selected color in state and apply it to a preview box\'s background',
   ],
   acceptance: [
@@ -23,8 +23,6 @@ const COLORS = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#60a5fa', '#c084fc'
 export default function Challenge() {
   const [selected, setSelected] = useState(COLORS[0])
 
-  // TODO: Create a handleSelect function that takes a color and updates state
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -37,18 +35,12 @@ export default function Challenge() {
               borderRadius: '8px',
               backgroundColor: color,
               cursor: 'pointer',
-            }}
-            // TODO: Add onClick that calls handleSelect with this color
+          }}
+          // TODO: Add onClick that calls handleSelect with this color
           />
         ))}
       </div>
-      <div style={{
-        width: '100%',
-        height: '80px',
-        borderRadius: '8px',
-        backgroundColor: selected,
-        transition: 'background-color 0.2s',
-      }} />
+      <div style={{ width: '100%', height: '80px', borderRadius: '8px', backgroundColor: selected, transition: 'background-color 0.2s' }} />
       <p style={{ fontFamily: 'monospace' }}>{selected}</p>
     </div>
   )

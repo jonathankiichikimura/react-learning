@@ -29,8 +29,7 @@ const initialTodos = [
 export default function Challenge() {
   const [todos, setTodos] = useState(initialTodos)
 
-  // TODO: Write a handleDelete function that removes a todo by id
-  // function handleDelete(id) { ... }
+  // TODO: Write a function to remove a todo by its id
 
   return (
     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.4rem', maxWidth: '300px' }}>
@@ -40,7 +39,7 @@ export default function Challenge() {
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.75rem', borderRadius: '6px', background: '#1a1a1a' }}
         >
           <span>{todo.text}</span>
-          {/* TODO: Add a × button that calls handleDelete(todo.id) */}
+          {/* TODO: Add a × delete button for this item */}
           <button>×</button>
         </li>
       ))}

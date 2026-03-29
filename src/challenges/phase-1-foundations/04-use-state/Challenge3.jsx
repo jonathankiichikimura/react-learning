@@ -19,24 +19,10 @@ export const description = {
 }
 
 export default function Challenge() {
-  // TODO: Create a single state object for { name, bio }
-  // const [profile, setProfile] = useState({ name: '', bio: '' })
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: '320px' }}>
-      <input
-        placeholder="Your name"
-        // TODO: wire up value and onChange
-      />
-      <input
-        placeholder="Short bio"
-        // TODO: wire up value and onChange
-      />
-      <div className="card" style={{ marginTop: '0.5rem', textAlign: 'left' }}>
-        <h3>Preview</h3>
-        {/* TODO: show profile.name and profile.bio */}
-        <p style={{ color: '#777', fontSize: '0.85rem' }}>Type above to see your profile</p>
-      </div>
+      {/* TODO: Add a single state object { name: '', bio: '' },
+               wire up both inputs, and show a live preview card below */}
     </div>
   )
 }
