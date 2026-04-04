@@ -318,3 +318,95 @@ function Parent() {
 ```
 
 If you want prop values to change on screen, the parent must use `useState`. A changing local variable never triggers a re-render.
+
+---
+
+## Rest props and prop spreading (`...rest`)
+
+When you build a wrapper component around a native HTML element (like `<input>`, `<button>`, or `<a>`), you usually need to forward all the native element's attributes through — `placeholder`, `type`, `disabled`, `aria-*`, `data-*`, `onKeyDown`, etc. Listing every possible attribute as an explicit prop is impractical.
+
+### The `...rest` pattern
+
+Destructure only the props your component *itself* uses, then collect everything else into a `rest` object and spread it onto the native element:
+
+```jsx
+function TextInput({ label, error, ...rest }) {
+  //                               ^^^^^
+  //                 "rest" captures every prop not listed above
+  return (
+    <div>
+      {label && <label>{label}</label>}
+      <input {...rest} />  {/* forwards type, placeholder, value, onChange, etc. */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </div>
+  )
+}
+```
+
+Now callers can use it like a real `<input>`:
+
+```jsx
+<TextInput
+  label="Email"
+  error={emailError}
+  type="email"
+  placeholder="you@example.com"
+  value={email}
+  onChange={e => setEmail(e.target.value)}
+  autoComplete="email"
+  required
+/>
+```
+
+`label` and `error` are consumed by `TextInput`. Everything else (`type`, `placeholder`, `value`, `onChange`, `autoComplete`, `required`) flows through `...rest` directly onto the `<input>`.
+
+### The order matters when spreading
+
+If you spread `rest` *before* explicit attributes, your explicit attributes win (they come last and override):
+
+```jsx
+// Your explicit className always wins, even if the caller passed one
+<input {...rest} className="my-input" />
+
+// The caller's className wins (probably not what you want)
+<input className="my-input" {...rest} />
+```
+
+Think of it as: "last writer wins." Put explicit overrides after the spread.
+
+### What NOT to forward
+
+Sometimes a prop is purely internal and should not reach the DOM:
+
+```jsx
+function Button({ variant, size, loading, children, ...rest }) {
+  // variant, size, loading — used to build className/style, NOT forwarded
+  return (
+    <button
+      {...rest}               // onClick, type, disabled, aria-*, etc.
+      disabled={loading || rest.disabled}
+      className={`btn btn-${variant} btn-${size}`}
+    >
+      {loading ? 'Loading…' : children}
+    </button>
+  )
+}
+```
+
+If you accidentally forward `variant` to the DOM (`<button variant="primary">`), React will warn about unknown DOM attributes.
+
+### Combining ...rest with default values
+
+```jsx
+function Button({ type = 'button', variant = 'default', ...rest }) {
+  return (
+    <button
+      type={type}                          // defaults to "button" (not "submit")
+      {...rest}                            // caller's props, including overrides
+      className={`btn btn-${variant}`}     // always applied
+    />
+  )
+}
+```
+
+Note: `type={type}` comes before `{...rest}`, so if the caller explicitly passes `type="submit"`, rest will override the default — which is the correct behavior.

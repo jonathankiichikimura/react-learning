@@ -408,3 +408,185 @@ The outer `{}` embeds a JS expression. The inner `{}` is the object literal.
 <label htmlFor="email">Email</label>
 <input id="email" type="email" />
 ```
+
+---
+
+## Inline styles in depth
+
+In JSX, the `style` prop accepts a **JavaScript object**, not a CSS string. This opens up patterns that CSS strings can't match.
+
+### The double-brace syntax explained
+
+```jsx
+<div style={{ color: 'red', fontSize: '16px' }}>Hello</div>
+```
+
+- The **outer** `{}` is the JSX expression delimiter — it means "evaluate JavaScript here"
+- The **inner** `{}` is the object literal
+
+It's exactly the same as:
+
+```jsx
+const styles = { color: 'red', fontSize: '16px' }
+<div style={styles}>Hello</div>
+```
+
+### CamelCase property names
+
+All CSS properties that contain a hyphen become camelCase in JS:
+
+| CSS property | JSX style key |
+|---|---|
+| `background-color` | `backgroundColor` |
+| `font-size` | `fontSize` |
+| `border-radius` | `borderRadius` |
+| `margin-top` | `marginTop` |
+| `z-index` | `zIndex` |
+| `flex-direction` | `flexDirection` |
+
+Vendor-prefixed properties also capitalize the prefix letter: `WebkitTransform`, `MozBoxSizing`.
+
+### Pixel values
+
+Numbers without units are treated as `px` for most properties:
+
+```jsx
+<div style={{ fontSize: 16, padding: 8, borderRadius: 4 }}>
+  // fontSize becomes "16px", padding becomes "8px", etc.
+</div>
+```
+
+For properties like `opacity`, `zIndex`, `flex`, and `lineHeight`, numbers remain unit-less:
+
+```jsx
+<div style={{ opacity: 0.5, zIndex: 10, flex: 1 }}>
+```
+
+### Computing styles dynamically
+
+Because `style` is just a JS object, you can build it with any JS logic:
+
+```jsx
+// Conditional style
+<div style={{ color: isError ? 'red' : 'green' }}>Status</div>
+
+// Style from state
+<div style={{ opacity: isDisabled ? 0.4 : 1, cursor: isDisabled ? 'not-allowed' : 'pointer' }}>
+```
+
+### Style lookup maps
+
+A common pattern: define a map of variant → style object, then look up the right one:
+
+```jsx
+const PRIORITY_COLORS = {
+  low:    { background: '#1a3a1a', color: '#4ade80' },
+  medium: { background: '#3a2a1a', color: '#fb923c' },
+  high:   { background: '#3a1a1a', color: '#f87171' },
+}
+
+function Tag({ priority, label }) {
+  return (
+    <span style={{ ...PRIORITY_COLORS[priority], padding: '2px 8px', borderRadius: '12px' }}>
+      {label}
+    </span>
+  )
+}
+
+// Usage:
+<Tag priority="high" label="Urgent" />
+<Tag priority="low"  label="Someday" />
+```
+
+This avoids a chain of if/else or ternaries — just look up the right object and spread it.
+
+### Merging style objects with spread
+
+```jsx
+const base  = { padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }
+const primary = { ...base, background: '#3b82f6', color: '#fff' }
+const danger  = { ...base, background: '#ef4444', color: '#fff' }
+```
+
+Later properties override earlier ones, so spreading `base` first and adding variant styles after gives you clean inheritance.
+
+---
+
+## JSX as values
+
+JSX expressions are first-class JavaScript values. You can assign them to variables, put them in arrays, pass them as arguments, and return them from functions — just like numbers or strings.
+
+### Storing JSX in a variable
+
+```jsx
+const icon = <span aria-hidden="true">★</span>
+
+function Rating({ score }) {
+  return (
+    <div>
+      {icon} {score}/5
+    </div>
+  )
+}
+```
+
+`icon` is assigned once and reused wherever you need it in the same scope.
+
+### Conditional JSX assignment
+
+```jsx
+function StatusBadge({ status }) {
+  let badge
+
+  if (status === 'active') {
+    badge = <span style={{ color: '#4ade80' }}>● Active</span>
+  } else if (status === 'pending') {
+    badge = <span style={{ color: '#fb923c' }}>◐ Pending</span>
+  } else {
+    badge = <span style={{ color: '#999' }}>○ Inactive</span>
+  }
+
+  return <div className="card">{badge}</div>
+}
+```
+
+This is useful when the choice between three or more options is too complex for a ternary. Assign the right JSX to a variable, then render it in one place.
+
+### JSX in arrays
+
+```jsx
+const actions = [
+  <button key="edit"   onClick={onEdit}>Edit</button>,
+  <button key="copy"   onClick={onCopy}>Copy</button>,
+  <button key="delete" onClick={onDelete}>Delete</button>,
+]
+
+return <div className="toolbar">{actions}</div>
+```
+
+Arrays of JSX need `key` props on each element, just like `.map()` output.
+
+### JSX returned from a helper function
+
+```jsx
+function renderStars(count) {
+  return Array.from({ length: count }, (_, i) => (
+    <span key={i} style={{ color: '#facc15' }}>★</span>
+  ))
+}
+
+function ProductCard({ rating }) {
+  return (
+    <div>
+      <div>{renderStars(rating)}</div>
+      <p>{rating}/5</p>
+    </div>
+  )
+}
+```
+
+This is a helper function — not a component (no capitalized name, not rendered as `<RenderStars />`). It's just a function that returns JSX.
+
+### The key rule: JSX evaluates to a React element object
+
+Under the hood, `<span>Hello</span>` compiles to `React.createElement('span', null, 'Hello')` — a plain JS object. That's why you can store it in a variable: you're just storing an object, not triggering any rendering. Rendering only happens when React processes the return value of your component.

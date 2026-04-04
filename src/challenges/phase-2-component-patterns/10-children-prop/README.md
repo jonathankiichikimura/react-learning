@@ -313,3 +313,88 @@ function Wrapper({ children }) {
   return <div>{children}</div>
 }
 ```
+
+---
+
+## Conditional children — the gated access pattern
+
+A component can choose whether to render its `children` based on some condition. This is the "gated" or "guard" pattern: the wrapper decides if the content should be shown at all.
+
+### Basic gating
+
+```jsx
+function Gated({ isAllowed, children }) {
+  if (!isAllowed) return null
+  return <>{children}</>
+}
+
+// Usage:
+<Gated isAllowed={user.isAdmin}>
+  <AdminPanel />
+</Gated>
+```
+
+When `isAllowed` is false, nothing renders — not even a wrapper div.
+
+### Gating with a fallback
+
+Often you want to show *something* when access is denied — an upgrade prompt, a login message, a placeholder:
+
+```jsx
+function Gated({ isAllowed, children, fallback = null }) {
+  return isAllowed ? <>{children}</> : <>{fallback}</>
+}
+
+<Gated
+  isAllowed={user.isPremium}
+  fallback={<p style={{ color: '#999' }}>Upgrade to Pro to access this feature.</p>}
+>
+  <ProFeature />
+</Gated>
+```
+
+The `fallback` prop defaults to `null`, so existing uses without a fallback continue to work.
+
+### Why this is useful
+
+Without the `Gated` pattern, access control logic scatters throughout the JSX:
+
+```jsx
+// ❌ Access control inline everywhere — hard to scan, easy to miss
+{user.isAdmin && <AdminLink />}
+{user.isAdmin && <DeleteButton />}
+{user.isAdmin && <UsersTable />}
+{!user.isAdmin && <p>Access denied.</p>}
+```
+
+With `Gated`, the access rule is stated once at the boundary:
+
+```jsx
+// ✅ Clean — the gate is one component, the content is its children
+<Gated isAllowed={user.isAdmin} fallback={<AccessDenied />}>
+  <AdminLink />
+  <DeleteButton />
+  <UsersTable />
+</Gated>
+```
+
+### Variations you'll see in the wild
+
+```jsx
+// Role-based: accepts a required role string
+function RequireRole({ role, user, children, fallback = null }) {
+  return user.roles.includes(role) ? children : fallback
+}
+
+// Feature flags: show experimental UI only when flag is on
+function FeatureFlag({ flag, flags, children }) {
+  return flags[flag] ? children : null
+}
+
+// Loading guard: show children only when data is ready
+function WhenReady({ isLoading, children, fallback = <Spinner /> }) {
+  return isLoading ? fallback : children
+}
+```
+
+All of these are the same fundamental pattern: a component that uses a condition to decide whether to render `children` or an alternative.

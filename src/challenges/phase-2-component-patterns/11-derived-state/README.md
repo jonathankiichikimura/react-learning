@@ -272,3 +272,110 @@ const [sortedItems, setSorted] = useState([...items].sort(compareFn))
 const sortedItems = [...items].sort(compareFn)
 // Use useMemo only if profiling shows it's actually slow
 ```
+
+---
+
+## Chained derivations
+
+Sometimes a derived value itself is the input for the next derivation. You build a pipeline — each step depends on the previous one, and all of them depend on the single source of state.
+
+### The shopping cart example
+
+```jsx
+const [cart, setCart] = useState(INITIAL_CART)
+
+// Step 1 — aggregate raw state
+const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+
+// Step 2 — derived from step 1
+const discount = subtotal >= 50 ? subtotal * 0.1 : 0
+
+// Step 3 — derived from steps 1 and 2
+const tax = (subtotal - discount) * 0.08
+
+// Step 4 — derived from steps 1, 2, and 3
+const total = subtotal - discount + tax
+```
+
+Four separate values — all guaranteed correct — from one array in state. There's no `setSubtotal`, `setDiscount`, `setTax`, or `setTotal`. Every quantity change automatically flows through all four steps on the next render.
+
+### The pipeline mental model
+
+```
+cart (state)
+  └── subtotal   (reduce over cart)
+        └── discount   (conditional % of subtotal)
+              └── tax        (% of discounted subtotal)
+                    └── total      (subtotal - discount + tax)
+```
+
+Each arrow represents a pure calculation. Pure means: same inputs always produce the same outputs, no side effects. This makes the whole pipeline easy to reason about and impossible to get out of sync.
+
+### Conditional steps in a chain
+
+The discount example shows a conditional mid-chain derivation:
+
+```jsx
+const discount = subtotal >= 50 ? subtotal * 0.1 : 0
+```
+
+When `discount` is 0, the downstream calculations (`tax`, `total`) still work correctly — they're just computing as if no discount applies. The conditional produces 0, and 0 flows cleanly through the rest of the chain.
+
+This also drives a conditional render: you only show the discount row when it applies:
+
+```jsx
+{discount > 0 && (
+  <div>
+    <span>Discount (10%)</span>
+    <span>−${discount.toFixed(2)}</span>
+  </div>
+)}
+```
+
+### Naming intermediate values
+
+Name each step clearly — it makes the chain self-documenting:
+
+```jsx
+// Hard to follow — what does each expression mean?
+const result = items.reduce((s, i) => s + i.p * i.q, 0) * (1 - (items.reduce((s, i) => s + i.p * i.q, 0) >= 50 ? 0.1 : 0))
+
+// Clear — each step has a name and purpose
+const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0)
+const discount = subtotal >= 50 ? subtotal * 0.1 : 0
+const total    = subtotal - discount
+```
+
+### Filter + sort pipeline
+
+The same chaining principle applies to filtering and sorting:
+
+```jsx
+const [search, setSearch] = useState('')
+const [sort,   setSort]   = useState('none')
+
+// Step 1 — filter from the full list
+const filtered = products.filter(p =>
+  p.name.toLowerCase().includes(search.toLowerCase())
+)
+
+// Step 2 — sort the already-filtered result
+const displayed =
+  sort === 'asc'  ? [...filtered].sort((a, b) => a.price - b.price) :
+  sort === 'desc' ? [...filtered].sort((a, b) => b.price - a.price) :
+  filtered
+```
+
+`products` → `filtered` → `displayed`. Each step is derived from the previous. The sort only operates on products that passed the search filter — exactly what you'd expect. And all of this reacts automatically whenever `search`, `sort`, or `products` changes.
+
+### How many steps can you chain?
+
+As many as make sense. Common patterns:
+
+```
+raw data → filtered → sorted → paginated → displayed
+items    → totals   → discounted → taxed → final price
+form     → validated fields → derived summary → submit-ready
+```
+
+The only rule: keep each step a pure computation, and don't store any of the intermediate values as state.
