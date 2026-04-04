@@ -5,6 +5,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(1)
   const [showSolution, setShowSolution] = useState(false)
   const [expandedPhases, setExpandedPhases] = useState([1])
+  const [expandedSubsections, setExpandedSubsections] = useState([1])
 
   const current = allChallenges.find(c => c.id === selectedId)
   const ActiveComponent = showSolution ? current.Solution : current.Challenge
@@ -20,6 +21,16 @@ export default function App() {
     )
   }
 
+  function toggleSubsection(id) {
+    setExpandedSubsections(prev =>
+      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
+    )
+  }
+
+  const filePath = current.subsectionFolder
+    ? `src/challenges/${current.phaseFolder}/${current.subsectionFolder}/${current.file}`
+    : `src/challenges/${current.phaseFolder}/${current.slug}/Challenge.jsx`
+
   return (
     <div className="app">
       <aside className="sidebar">
@@ -27,7 +38,11 @@ export default function App() {
         <nav>
           {phases.map(phase => {
             const isOpen = expandedPhases.includes(phase.id)
-            const hasActive = phase.challenges.some(c => c.id === selectedId)
+            const allPhaseChallenges = phase.subsections
+              ? phase.subsections.flatMap(s => s.challenges)
+              : phase.challenges
+            const hasActive = allPhaseChallenges.some(c => c.id === selectedId)
+
             return (
               <div key={phase.id} className="phase-group">
                 <button
@@ -38,7 +53,38 @@ export default function App() {
                   <span className="phase-name">{phase.title}</span>
                   <span className="phase-chevron">{isOpen ? '▾' : '▸'}</span>
                 </button>
-                {isOpen && (
+
+                {isOpen && (phase.subsections ? (
+                  phase.subsections.map(sub => {
+                    const subIsOpen = expandedSubsections.includes(sub.id)
+                    const subHasActive = sub.challenges.some(c => c.id === selectedId)
+                    return (
+                      <div key={sub.id} className="subsection-group">
+                        <button
+                          className={`subsection-header ${subIsOpen ? 'open' : ''} ${subHasActive ? 'has-active' : ''}`}
+                          onClick={() => toggleSubsection(sub.id)}
+                        >
+                          <span className="subsection-name">{sub.title}</span>
+                          <span className="subsection-chevron">{subIsOpen ? '▾' : '▸'}</span>
+                        </button>
+                        {subIsOpen && (
+                          <div className="subsection-challenges">
+                            {sub.challenges.map(c => (
+                              <button
+                                key={c.id}
+                                className={`challenge-btn ${c.id === selectedId ? 'active' : ''}`}
+                                onClick={() => selectChallenge(c.id)}
+                              >
+                                <span className="challenge-num">{String(c.id).padStart(2, '0')}</span>
+                                <span>{c.title}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })
+                ) : (
                   <div className="phase-challenges">
                     {phase.challenges.map(c => (
                       <button
@@ -51,7 +97,7 @@ export default function App() {
                       </button>
                     ))}
                   </div>
-                )}
+                ))}
               </div>
             )
           })}
@@ -101,9 +147,7 @@ export default function App() {
 
             <section className="desc-section">
               <h3 className="desc-label">Edit this file</h3>
-              <code className="file-path">
-                src/challenges/{current.phaseFolder}/{current.slug}/Challenge.jsx
-              </code>
+              <code className="file-path">{filePath}</code>
             </section>
           </aside>
 
