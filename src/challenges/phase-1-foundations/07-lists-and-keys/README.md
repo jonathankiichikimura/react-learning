@@ -355,3 +355,164 @@ const visibleTasks = filter === 'all' ? tasks : tasks.filter(...)
 // Right — use a stable id
 {items.map(item => <Item key={item.id} item={item} />)}
 ```
+
+---
+
+## Sorting lists immutably
+
+`Array.prototype.sort()` mutates the array it's called on. **Never call `.sort()` directly on state** — mutating state is a React bug.
+
+```jsx
+// ❌ Mutates the state array — React may not re-render, UI goes stale
+const [contacts, setContacts] = useState(initialContacts)
+contacts.sort((a, b) => a.name.localeCompare(b.name))  // sorts in place!
+```
+
+Instead, make a **copy first**, then sort the copy:
+
+```jsx
+// ✅ Spread to copy, then sort the copy
+const sorted = [...contacts].sort((a, b) => a.name.localeCompare(b.name))
+```
+
+`[...contacts]` creates a new array with the same items. `.sort()` mutates *that* new array, not state.
+
+### Sorting with state-controlled order
+
+A common pattern: store the sort mode in state, derive the sorted list from it every render.
+
+```jsx
+const [sort, setSort] = useState('name')  // 'name' | 'age' | 'none'
+
+const displayed =
+  sort === 'name' ? [...contacts].sort((a, b) => a.name.localeCompare(b.name)) :
+  sort === 'age'  ? [...contacts].sort((a, b) => a.age - b.age) :
+  contacts  // 'none' — original order, no copy needed
+
+return (
+  <>
+    <div>
+      <button onClick={() => setSort('name')}>Sort by name</button>
+      <button onClick={() => setSort('age')}>Sort by age</button>
+      <button onClick={() => setSort('none')}>Reset</button>
+    </div>
+    <ul>
+      {displayed.map(c => <li key={c.id}>{c.name} — {c.age}</li>)}
+    </ul>
+  </>
+)
+```
+
+The original `contacts` state is never touched. `displayed` is a freshly sorted copy on every render, derived from `sort` and `contacts`.
+
+### Common comparator patterns
+
+```jsx
+// Alphabetical (strings)
+[...items].sort((a, b) => a.name.localeCompare(b.name))
+
+// Reverse alphabetical
+[...items].sort((a, b) => b.name.localeCompare(a.name))
+
+// Numeric ascending
+[...items].sort((a, b) => a.price - b.price)
+
+// Numeric descending
+[...items].sort((a, b) => b.price - a.price)
+
+// Date (ISO string or Date objects)
+[...items].sort((a, b) => new Date(a.date) - new Date(b.date))
+
+// Boolean — put trues first
+[...items].sort((a, b) => Number(b.isPinned) - Number(a.isPinned))
+```
+
+The comparator returns a negative number (a before b), positive number (b before a), or zero (equal). Swapping `a` and `b` in the expression reverses the order.
+
+---
+
+## Inline editing pattern
+
+Allowing users to edit list items in-place — without a separate "edit page" — is a recurring UI pattern. The standard approach stores two pieces of state: **which item is being edited** and **the current draft value**.
+
+### The `editingId` / `editDraft` pair
+
+```jsx
+const [items, setItems]       = useState(initialItems)
+const [editingId, setEditingId] = useState(null)   // null = no item being edited
+const [editDraft, setEditDraft] = useState('')     // the text currently in the edit field
+```
+
+### Three operations to implement
+
+**1. Start editing** — record which item and pre-fill the draft:
+
+```jsx
+function startEdit(item) {
+  setEditingId(item.id)
+  setEditDraft(item.title)
+}
+```
+
+**2. Commit the edit** — update the item in the array, clear editing state:
+
+```jsx
+function commitEdit(id) {
+  setItems(items.map(item =>
+    item.id === id ? { ...item, title: editDraft } : item
+  ))
+  setEditingId(null)
+  setEditDraft('')
+}
+```
+
+**3. Cancel** — just clear the editing state without touching items:
+
+```jsx
+function cancelEdit() {
+  setEditingId(null)
+  setEditDraft('')
+}
+```
+
+### Wiring it up in JSX
+
+Conditionally render an `<input>` for the item being edited, and the read-only display for all others:
+
+```jsx
+{items.map(item => (
+  <div key={item.id}>
+    {editingId === item.id ? (
+      <>
+        <input
+          value={editDraft}
+          onChange={e => setEditDraft(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') commitEdit(item.id)
+            if (e.key === 'Escape') cancelEdit()
+          }}
+          autoFocus
+        />
+        <button onClick={() => commitEdit(item.id)}>Save</button>
+        <button onClick={cancelEdit}>Cancel</button>
+      </>
+    ) : (
+      <>
+        <span>{item.title}</span>
+        <button onClick={() => startEdit(item)}>Edit</button>
+      </>
+    )}
+  </div>
+))}
+```
+
+### Why `editingId` instead of a boolean `isEditing`?
+
+A single boolean would only tell you *whether* something is being edited, not *which* item. You'd have no way to show the edit input for item 3 while showing read-only for items 1, 2, and 4. The `editingId` approach scales to any list size — only the item whose id matches gets the edit UI.
+
+### Key UX touches
+
+- **`autoFocus`** on the input: focuses automatically when the user clicks "Edit"
+- **`onKeyDown` Enter**: lets users save without clicking the button
+- **`onKeyDown` Escape**: quick cancel without reaching for the mouse
+- **Pre-fill `editDraft`** from `item.title`: user sees the current value, not a blank field

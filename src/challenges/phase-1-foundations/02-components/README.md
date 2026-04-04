@@ -368,3 +368,119 @@ function Button() {
 }
 export default Button
 ```
+
+---
+
+## Extracting components — the refactoring skill
+
+Writing a component as one big block first and then splitting it up is a normal, healthy workflow. The challenge is knowing *when* to extract and *where* to draw the lines.
+
+### Signs it's time to extract
+
+- A section of JSX is visually distinct and could be described in one phrase ("the navigation bar", "a product card", "the footer links")
+- The same block of JSX appears more than once — even if the content differs
+- A piece of JSX is getting large enough that you're losing track of the overall structure
+- A chunk of JSX has its own local variables or logic that doesn't affect the rest
+
+### The process
+
+Start with a monolithic component:
+
+```jsx
+function App() {
+  return (
+    <div>
+      <nav style={{ background: '#111', padding: '1rem', display: 'flex', gap: '1rem' }}>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </nav>
+
+      <section style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+        <h1>Welcome to My Site</h1>
+        <p>The best place on the web.</p>
+        <button>Get Started</button>
+      </section>
+
+      <footer style={{ background: '#111', padding: '1rem', textAlign: 'center' }}>
+        <p>© 2025 My Site</p>
+      </footer>
+    </div>
+  )
+}
+```
+
+Extract each section into its own component:
+
+```jsx
+function NavBar() {
+  return (
+    <nav style={{ background: '#111', padding: '1rem', display: 'flex', gap: '1rem' }}>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  )
+}
+
+function Hero() {
+  return (
+    <section style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+      <h1>Welcome to My Site</h1>
+      <p>The best place on the web.</p>
+      <button>Get Started</button>
+    </section>
+  )
+}
+
+function Footer() {
+  return (
+    <footer style={{ background: '#111', padding: '1rem', textAlign: 'center' }}>
+      <p>© 2025 My Site</p>
+    </footer>
+  )
+}
+
+function App() {
+  return (
+    <div>
+      <NavBar />
+      <Hero />
+      <Footer />
+    </div>
+  )
+}
+```
+
+The `App` component now reads like an outline. You can understand the page structure at a glance.
+
+### When duplication signals the need for props
+
+If you find yourself writing nearly identical components with only small differences:
+
+```jsx
+function AliceCard() {
+  return <div className="card"><h3>Alice</h3><p>Engineer</p></div>
+}
+
+function BobCard() {
+  return <div className="card"><h3>Bob</h3><p>Designer</p></div>
+}
+```
+
+That duplication is a strong signal to extract a single component with props:
+
+```jsx
+function PersonCard({ name, role }) {
+  return <div className="card"><h3>{name}</h3><p>{role}</p></div>
+}
+
+<PersonCard name="Alice" role="Engineer" />
+<PersonCard name="Bob"   role="Designer" />
+```
+
+This is the natural progression: you notice the pattern in repeated JSX, extract a component, and discover it needs props. The duplication is a stepping stone, not a mistake.
+
+### How small is too small?
+
+There's no fixed rule. A component that renders a single `<p>` tag is probably too granular. A component that renders a `<div>` with 10+ attributes and several children is a good extraction candidate. The guiding question: **does naming this thing make the code clearer?** If yes, extract it.
