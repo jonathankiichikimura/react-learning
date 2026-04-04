@@ -105,6 +105,58 @@ body {
   padding-bottom: 0.25rem;
 }
 
+/* ---- Subsection groups (inside expanded phases) ---- */
+
+.subsection-group {
+  border-top: 1px solid #1a1a1a;
+}
+
+.subsection-group:first-child {
+  border-top: none;
+}
+
+.subsection-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.42rem 0.75rem 0.42rem 1.1rem;
+  border: none;
+  background: transparent;
+  color: #4a4a4a;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.71rem;
+  font-weight: 600;
+  transition: color 0.1s;
+}
+
+.subsection-header:hover {
+  color: #777;
+  background: #181818;
+}
+
+.subsection-header.has-active {
+  color: #7ab8f5;
+}
+
+.subsection-name {
+  flex: 1;
+}
+
+.subsection-chevron {
+  font-size: 0.58rem;
+  color: #383838;
+}
+
+.subsection-challenges {
+  padding-bottom: 0.15rem;
+}
+
+.subsection-challenges .challenge-btn {
+  padding-left: 1.6rem;
+}
+
 .challenge-btn {
   display: flex;
   align-items: center;
